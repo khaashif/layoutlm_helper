@@ -99,7 +99,7 @@ class ModelHandler(object):
 
         return [results]
 
-    def postprocess(self, inference_output):
+    def postprocess(self, inference_output, img_paths):
         docs = []
         k = 0
         for page, doc_words in enumerate(self._raw_input_data['words']):
@@ -170,7 +170,7 @@ class ModelHandler(object):
 
                                    }
                 output_spans.append(output_span)
-            docs.append({f'output': output_spans})
+            docs.append({f'output': output_spans, 'img_path':img_paths[page]})
         return [json.dumps(docs, ensure_ascii=False)]
 
     def handle(self, data, context):
@@ -180,7 +180,7 @@ class ModelHandler(object):
         :param context: mms context
         """
         model_input = self.preprocess(data)
-        model_out = self.inference(model_input)
+        model_out = self.inference(model_input, data['image_path'])
         inference_out = self.postprocess(model_out)[0]
         with open('LayoutlMV3InferenceOutput.json', 'w') as inf_out:
             inf_out.write(inference_out)
