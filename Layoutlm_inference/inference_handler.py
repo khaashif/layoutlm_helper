@@ -180,8 +180,8 @@ class ModelHandler(object):
         :param context: mms context
         """
         model_input = self.preprocess(data)
-        model_out = self.inference(model_input, data['image_path'])
-        inference_out = self.postprocess(model_out)[0]
+        model_out = self.inference(model_input)
+        inference_out = self.postprocess(model_out, data['image_path'])[0]
         with open('LayoutlMV3InferenceOutput.json', 'w') as inf_out:
             inf_out.write(inference_out)
         inference_out_list = json.loads(inference_out)
